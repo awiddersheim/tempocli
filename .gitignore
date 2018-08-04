@@ -1,0 +1,15 @@
+*.swp
+*.swo
+*.pyc
+*.pyo
+__pycache__
+*.egg-info
+.eggs
+.coverage
+.tox/
+build/
+dist/
+.DS_Store
+version.py
+.pytest_cache/
+.python-version

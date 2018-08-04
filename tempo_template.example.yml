@@ -1,0 +1,11 @@
+---
+author: awiddersheim
+
+issues:
+  - issue: INT-8
+    time_spent: 30m
+    start_time: "09:30:00"
+
+  - issue: INT-7
+    time_spent: 1h
+    start_time: "12:00:00"
