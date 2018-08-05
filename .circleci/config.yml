@@ -1,0 +1,145 @@
+version: 2
+jobs:
+  python34: &pytest-template
+    docker:
+      - image: circleci/python:3.4
+    environment:
+      TOXENV: py34
+    steps:
+      - checkout
+      - run: pip install --user tox
+      - run: /home/circleci/.local/bin/tox -- --color yes --cov-report html --junitxml test_results/pytest/results.xml
+      - run: tar --directory htmlcov -czvf coverage.tar.gz .
+      - store_artifacts:
+          path: coverage.tar.gz
+          destination: coverage.tar.gz
+      - store_artifacts:
+          path: test_results/pytest/results.xml
+          destination: pytest_results.xml
+      - store_test_results:
+          path: test_results
+
+  python35:
+    <<: *pytest-template
+    docker:
+      - image: circleci/python:3.5
+    environment:
+      TOXENV: py35
+
+  python36:
+    <<: *pytest-template
+    docker:
+      - image: circleci/python:3.6
+    environment:
+      TOXENV: py36
+
+  python37:
+    <<: *pytest-template
+    docker:
+      - image: circleci/python:3.7
+    environment:
+      TOXENV: py37
+
+  flake8: &tox-template
+    docker:
+      - image: circleci/python:3
+    environment:
+      TOXENV: flake8
+    steps:
+      - checkout
+      - run: pip install --user tox
+      - run: /home/circleci/.local/bin/tox
+
+  check_readme:
+    <<: *tox-template
+    docker:
+      - image: circleci/python:3
+    environment:
+      TOXENV: check_readme
+
+  build:
+    docker:
+      - image: circleci/python:3
+    environment:
+      TOXENV: build
+    steps:
+      - checkout
+      - run: pip install --user tox
+      - run: /home/circleci/.local/bin/tox
+      - store_artifacts:
+          path: dist
+          destination: packages
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist
+
+  deploy:
+    docker:
+      - image: circleci/python:3
+    environment:
+      TOXENV: deploy
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - checkout
+      - run: pip install --user tox
+      - run: |
+          export GITHUB_RELEASE_CICD_REPO=$(python setup.py --name)
+          export GITHUB_RELEASE_CICD_CREATE_TAG="v$(python setup.py --version)"
+          export GITHUB_RELEASE_CICD_CREATE_MESSAGE=$(git show --no-patch --pretty=format:"%s%n%b" ${CIRCLE_SHA1})
+          export GITHUB_RELEASE_CICD_CREATE_TARGET=${CIRCLE_SHA1}
+          /home/circleci/.local/bin/tox -- '/tmp/workspace/dist/*'
+
+workflows:
+  version: 2
+  test-and-build:
+    jobs:
+      - check_readme:
+          filters:
+            tags:
+              only: /^v.*/
+      - flake8:
+          filters:
+            tags:
+              only: /^v.*/
+      - python27:
+          filters:
+            tags:
+              only: /^v.*/
+      - python34:
+          filters:
+            tags:
+              only: /^v.*/
+      - python35:
+          filters:
+            tags:
+              only: /^v.*/
+      - python36:
+          filters:
+            tags:
+              only: /^v.*/
+      - python37:
+          filters:
+            tags:
+              only: /^v.*/
+      - build:
+          requires:
+            - check_readme
+            - flake8
+            - python27
+            - python34
+            - python35
+            - python36
+            - python37
+          filters:
+            tags:
+              only: /^v.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
