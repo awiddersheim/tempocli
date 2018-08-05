@@ -33,6 +33,7 @@ def common_template_options(f):
             dir_okay=False,
             resolve_path=True,
         ),
+        show_default=True,
     )(f)
 
     return f
@@ -51,6 +52,7 @@ def common_template_options(f):
         dir_okay=False,
         resolve_path=True,
     ),
+    show_default=True,
 )
 @click.option(
     '-v',
@@ -65,6 +67,7 @@ def common_template_options(f):
     help='Number of workers to spawn.',
     envvar='WORKERS',
     default=10,
+    show_default=True,
 )
 @click.pass_context
 def cli(ctx, config, workers, verbose):
