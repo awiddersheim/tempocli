@@ -48,11 +48,7 @@ class TestTempoCliCreate(object):
         def func(args=None, **kwargs):
             _args.extend(args or [])
 
-            return cli_invoke(
-                cli,
-                _args,
-                **kwargs,
-            )
+            return cli_invoke(cli, _args, **kwargs)
 
         return func
 
