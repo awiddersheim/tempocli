@@ -74,7 +74,7 @@ Development
 ::
 
     $ pip install -e .
-    $ {{ cookiecutter.project_name }} --help
+    $ tempocli --help
 
 
 Testing
