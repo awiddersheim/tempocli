@@ -41,7 +41,7 @@ def get_env_opt(var, *args, **kwargs):
     return os.environ.get(
         '{}_{}'.format(
             click.get_current_context().auto_envvar_prefix,
-            var
+            var,
         ),
         *args,
         **kwargs,
