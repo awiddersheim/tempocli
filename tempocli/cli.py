@@ -11,6 +11,9 @@ from tempocli.funcs import load_yaml
 from tempocli.funcs import parse_short_time
 
 
+ENVVAR_PREFIX = 'TEMPOCLI'
+
+
 class Tempo(object):
     def __init__(self, config, client, verbose):
         self.config = config
@@ -68,6 +71,11 @@ def cli(ctx, config, workers, verbose):
     """Interact with Tempo time tracking from the command line."""
 
     config = load_yaml(config)
+
+    token = os.environ.get('{}_TOKEN'.format(ctx.auto_envvar_prefix))
+
+    if token:
+        config['token'] = token
 
     client = TempoClient(
         base_url=config['url'],
@@ -152,6 +160,6 @@ def create(tempo, template):
 
 def main():  # pragma: no cover
     cli(
-        auto_envvar_prefix='TEMPOCLI',
+        auto_envvar_prefix=ENVVAR_PREFIX,
         prog_name='tempocli',
     )

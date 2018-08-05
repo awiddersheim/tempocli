@@ -3,6 +3,7 @@ import copy
 import pytest
 
 from tempocli.cli import cli
+from tempocli.cli import ENVVAR_PREFIX
 from tests.helpers import write_yaml
 
 
@@ -34,9 +35,7 @@ class TestTempoCliCreate(object):
         return tmpdir.join('template.yml')
 
     @pytest.fixture
-    def template_runner(self, cli_runner, config, template, args=None, **kwargs):
-        args = args or []
-
+    def template_runner(self, cli_runner, config, template):
         _args = [
             '-vvv',
             '--config',
@@ -46,12 +45,13 @@ class TestTempoCliCreate(object):
             template.strpath,
         ]
 
-        _args.extend(args)
+        def func(args=None, **kwargs):
+            _args.extend(args or [])
 
-        def func():
             return cli_runner.invoke(
                 cli,
                 _args,
+                auto_envvar_prefix=ENVVAR_PREFIX,
                 **kwargs,
             )
 
@@ -122,6 +122,24 @@ class TestTempoCliCreate(object):
         assert not result.output
         assert request.called_once
         assert request.last_request.json()['authorUsername'] == template_data['issues'][0]['extras']['authorUsername']
+
+    def test_create_token_from_env(self, template, template_data, template_runner, tempo_request):
+        token = 'fromenv'  # noqa: S105
+
+        write_yaml(template, template_data)
+
+        request = tempo_request.post('/worklogs')
+
+        result = template_runner(
+            env={
+                '{}_TOKEN'.format(ENVVAR_PREFIX): token,
+            },
+        )
+
+        assert result.exit_code == 0
+        assert not result.output
+        assert request.called_once
+        assert request.last_request.headers['Authorization'] == 'Bearer {}'.format(token)
 
     def test_create_future_date(self, template, template_data, template_runner, tempo_request):
         template_data['issues'][0]['start_time'] = 'Monday at 11am'

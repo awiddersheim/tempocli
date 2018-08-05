@@ -61,12 +61,16 @@ Running
 Configuration
 -------------
 
-By default, ``~/.tempocli.yml`` is the path used for configuration file but
-that is configurable. The configuration should look like this::
+By default, ``~/.tempocli.yml`` is the path used for the configuration
+file but that can be changed with the ``--config`` option during
+invocation. The configuration file should look like this::
 
     ---
     url: https://api.tempo.io/2/
     token: <token>
+
+It is also possible to specify the token using the ``TEMPOCLI_TOKEN``
+environment variable.
 
 Development
 -----------
