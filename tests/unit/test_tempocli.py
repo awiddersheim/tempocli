@@ -35,7 +35,7 @@ class TestTempoCliCreate(object):
         return tmpdir.join('template.yml')
 
     @pytest.fixture
-    def template_invoke(self, cli_runner, config, template):
+    def template_invoke(self, cli_invoke, config, template):
         _args = [
             '-vvv',
             '--config',
@@ -48,10 +48,9 @@ class TestTempoCliCreate(object):
         def func(args=None, **kwargs):
             _args.extend(args or [])
 
-            return cli_runner.invoke(
+            return cli_invoke(
                 cli,
                 _args,
-                auto_envvar_prefix=ENVVAR_PREFIX,
                 **kwargs,
             )
 

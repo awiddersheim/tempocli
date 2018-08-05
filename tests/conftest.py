@@ -1,6 +1,7 @@
 import pytest
 import requests_mock
 
+from tempocli.cli import ENVVAR_PREFIX
 from tempocli.client import TempoClient
 from tests.helpers import write_yaml
 
@@ -49,3 +50,13 @@ def tempo_request(tempo_client):
 
     with requests_mock.Mocker(adapter=CustomAdapter()) as mock:
         yield mock
+
+
+@pytest.fixture
+def cli_invoke(cli_runner):
+    def func(*args, **kwargs):
+        kwargs.setdefault('auto_envvar_prefix', ENVVAR_PREFIX)
+
+        return cli_runner.invoke(*args, **kwargs)
+
+    return func
