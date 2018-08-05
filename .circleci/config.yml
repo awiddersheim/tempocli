@@ -103,10 +103,6 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - python27:
-          filters:
-            tags:
-              only: /^v.*/
       - python34:
           filters:
             tags:
@@ -127,7 +123,6 @@ workflows:
           requires:
             - check_readme
             - flake8
-            - python27
             - python34
             - python35
             - python36
