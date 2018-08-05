@@ -61,8 +61,8 @@ Running
 Configuration
 -------------
 
-By default, ``~/.tempocli.yml`` is path used for configuration file but
-this is configurable. The configuration should look like this::
+By default, ``~/.tempocli.yml`` is the path used for configuration file but
+that is configurable. The configuration should look like this::
 
     ---
     url: https://api.tempo.io/2/
