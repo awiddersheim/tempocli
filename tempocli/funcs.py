@@ -1,3 +1,4 @@
+import os
 import re
 
 import click
@@ -35,3 +36,13 @@ def parse_short_time(time):
     data = match.groupdict()
 
     return int(data['time']) * TIME_UNITS[data['unit']]
+
+def get_env_opt(var, *args, **kwargs):
+    return os.environ.get(
+        '{}_{}'.format(
+            click.get_current_context().auto_envvar_prefix,
+            var
+        ),
+        *args,
+        **kwargs,
+    )

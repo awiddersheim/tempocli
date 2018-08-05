@@ -7,6 +7,7 @@ import click
 import dateutil.parser
 
 from tempocli.client import TempoClient
+from tempocli.funcs import get_env_opt
 from tempocli.funcs import load_yaml
 from tempocli.funcs import parse_short_time
 
@@ -75,7 +76,7 @@ def cli(ctx, config, workers, verbose):
 
     config = load_yaml(config)
 
-    token = os.environ.get('{}_TOKEN'.format(ctx.auto_envvar_prefix))
+    token = get_env_opt('TOKEN')
 
     if token:
         config['token'] = token
