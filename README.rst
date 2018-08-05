@@ -68,6 +68,32 @@ that is configurable. The configuration should look like this::
     url: https://api.tempo.io/2/
     token: <token>
 
+Development
+-----------
+
+::
+
+    $ pip install -e .
+    $ {{ cookiecutter.project_name }} --help
+
+
+Testing
+-------
+
+::
+
+    # Install development packages (preferably in a virtualenv)
+    $ pip install -e .[dev]
+
+    # Run tests
+    $ pytest
+
+    # Run tests for available Python interpreters
+    $ tox
+
+    # Linting
+    $ tox -e flake8
+
 
 .. |PackageVersion| image:: https://img.shields.io/pypi/v/tempocli.svg?style=flat
     :alt: PyPI version
