@@ -1,4 +1,5 @@
-TempoCLI ================================
+TempoCLI
+========
 
 Command line interface for interacting with Tempo.
 
@@ -60,7 +61,7 @@ Running
 Configuration
 -------------
 
-By default, `~/.tempocli.yml` is path used for configuration file but
+By default, ``~/.tempocli.yml`` is path used for configuration file but
 this is configurable. The configuration should look like this::
 
     ---
