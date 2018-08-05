@@ -8,7 +8,6 @@ def test_parse_short_time():
     assert parse_short_time('30s') == 30
     assert parse_short_time('30m') == 30 * 60
     assert parse_short_time('30h') == 30 * 60 * 60
-    assert parse_short_time('30d') == 30 * 60 * 60 * 24
 
 
 def test_parse_short_time_invalid():
