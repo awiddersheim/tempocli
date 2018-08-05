@@ -74,11 +74,23 @@ jobs:
           paths:
             - dist
 
-  deploy:
+  deploy_pypi:
     docker:
       - image: circleci/python:3
     environment:
-      TOXENV: deploy
+      TOXENV: deploy_pypi
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - checkout
+      - run: pip install --user tox
+      - run: /home/circleci/.local/bin/tox -- '/tmp/workspace/dist/*'
+
+  deploy_github:
+    docker:
+      - image: circleci/python:3
+    environment:
+      TOXENV: deploy_github
     steps:
       - attach_workspace:
           at: /tmp/workspace
@@ -89,7 +101,7 @@ jobs:
           export GITHUB_RELEASE_CICD_CREATE_TAG="v$(python setup.py --version)"
           export GITHUB_RELEASE_CICD_CREATE_MESSAGE=$(git show --no-patch --pretty=format:"%s%n%b" ${CIRCLE_SHA1})
           export GITHUB_RELEASE_CICD_CREATE_TARGET=${CIRCLE_SHA1}
-          /home/circleci/.local/bin/tox -- '/tmp/workspace/dist/*'
+          /home/circleci/.local/bin/tox -- --assets '/tmp/workspace/dist/*'
 
 workflows:
   version: 2
@@ -130,7 +142,13 @@ workflows:
           filters:
             tags:
               only: /^v.*/
-      - deploy:
+      - deploy_pypi:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v.*/
+      - deploy_github:
           requires:
             - build
           filters:
