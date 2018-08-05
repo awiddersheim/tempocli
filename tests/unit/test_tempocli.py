@@ -33,25 +33,36 @@ class TestTempoCliCreate(object):
     def template(self, tmpdir):
         return tmpdir.join('template.yml')
 
-    def invoke(self, runner, config, template):
-        return runner.invoke(
-            cli,
-            [
-                '-vvv',
-                '--config',
-                config.strpath,
-                'create',
-                '--template',
-                template.strpath,
-            ],
-        )
+    @pytest.fixture
+    def template_runner(self, cli_runner, config, template, args=None, **kwargs):
+        args = args or []
 
-    def test_create_single(self, cli_runner, config, template, template_data, tempo_request):
+        _args = [
+            '-vvv',
+            '--config',
+            config.strpath,
+            'create',
+            '--template',
+            template.strpath,
+        ]
+
+        _args.extend(args)
+
+        def func():
+            return cli_runner.invoke(
+                cli,
+                _args,
+                **kwargs,
+            )
+
+        return func
+
+    def test_create_single(self, template, template_data, template_runner, tempo_request):
         write_yaml(template, template_data)
 
         request = tempo_request.post('/worklogs')
 
-        result = self.invoke(cli_runner, config, template)
+        result = template_runner()
 
         assert result.exit_code == 0
         assert not result.output
@@ -65,7 +76,7 @@ class TestTempoCliCreate(object):
             'description': 'Working on issue {}'.format(self.data['issues'][0]['issue']),
         }
 
-    def test_create_multiple(self, cli_runner, config, template, template_data, tempo_request):
+    def test_create_multiple(self, template, template_data, template_runner, tempo_request):
         template_data['issues'].append({
             'issue': 'INT-10',
             'time_spent': '30m',
@@ -76,27 +87,27 @@ class TestTempoCliCreate(object):
 
         request = tempo_request.post('/worklogs')
 
-        result = self.invoke(cli_runner, config, template)
+        result = template_runner()
 
         assert result.exit_code == 0
         assert not result.output
         assert request.call_count == 2
 
-    def test_create_author_override(self, cli_runner, config, template, template_data, tempo_request):
+    def test_create_author_override(self, template, template_data, template_runner, tempo_request):
         template_data['issues'][0]['author'] = 'bar'
 
         write_yaml(template, template_data)
 
         request = tempo_request.post('/worklogs')
 
-        result = self.invoke(cli_runner, config, template)
+        result = template_runner()
 
         assert result.exit_code == 0
         assert not result.output
         assert request.called_once
         assert request.last_request.json()['authorUsername'] == template_data['issues'][0]['author']
 
-    def test_create_extras_override(self, cli_runner, config, template, template_data, tempo_request):
+    def test_create_extras_override(self, template, template_data, template_runner, tempo_request):
         template_data['issues'][0]['extras'] = {
             'authorUsername': 'bar',
         }
@@ -105,21 +116,21 @@ class TestTempoCliCreate(object):
 
         request = tempo_request.post('/worklogs')
 
-        result = self.invoke(cli_runner, config, template)
+        result = template_runner()
 
         assert result.exit_code == 0
         assert not result.output
         assert request.called_once
         assert request.last_request.json()['authorUsername'] == template_data['issues'][0]['extras']['authorUsername']
 
-    def test_create_future_date(self, cli_runner, config, template, template_data, tempo_request):
+    def test_create_future_date(self, template, template_data, template_runner, tempo_request):
         template_data['issues'][0]['start_time'] = 'Monday at 11am'
 
         write_yaml(template, template_data)
 
         request = tempo_request.post('/worklogs')
 
-        result = self.invoke(cli_runner, config, template)
+        result = template_runner()
 
         assert result.exit_code == 0
         assert not result.output
@@ -127,12 +138,12 @@ class TestTempoCliCreate(object):
         assert request.last_request.json()['startDate'] == '2018-08-06'
         assert request.last_request.json()['startTime'] == '11:00:00'
 
-    def test_create_http_error(self, cli_runner, config, template, template_data, tempo_request):
+    def test_create_http_error(self, template, template_data, template_runner, tempo_request):
         write_yaml(template, template_data)
 
         request = tempo_request.post('/worklogs', status_code=500)
 
-        result = self.invoke(cli_runner, config, template)
+        result = template_runner()
 
         assert 'Could not create (\'foo\', \'INT-8\',' in result.output
         assert 'Traceback' in result.output
