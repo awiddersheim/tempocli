@@ -37,6 +37,7 @@ def parse_short_time(time):
 
     return int(data['time']) * TIME_UNITS[data['unit']]
 
+
 def get_env_opt(var, *args, **kwargs):
     return os.environ.get(
         '{}_{}'.format(
