@@ -39,10 +39,10 @@ class TestTempoCliCreate(object):
             [
                 '-vvv',
                 '--config',
-                config,
+                config.strpath,
                 'create',
                 '--template',
-                template,
+                template.strpath,
             ],
         )
 
