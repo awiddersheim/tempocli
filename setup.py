@@ -44,6 +44,7 @@ setup(
         'pyyaml',
         'requests',
         'requests-futures',
+        'tqdm',
     ],
     extras_require={
         'dev': [

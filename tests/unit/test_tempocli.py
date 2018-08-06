@@ -60,7 +60,6 @@ class TestTempoCliCreate(object):
         result = template_invoke()
 
         assert result.exit_code == 0
-        assert not result.output
         assert request.called_once
         assert request.last_request.json() == {
             'authorUsername': 'foo',
@@ -85,7 +84,6 @@ class TestTempoCliCreate(object):
         result = template_invoke()
 
         assert result.exit_code == 0
-        assert not result.output
         assert request.call_count == 2
 
     def test_create_author_override(self, template, template_data, template_invoke, tempo_request):
@@ -98,7 +96,6 @@ class TestTempoCliCreate(object):
         result = template_invoke()
 
         assert result.exit_code == 0
-        assert not result.output
         assert request.called_once
         assert request.last_request.json()['authorUsername'] == template_data['issues'][0]['author']
 
@@ -114,7 +111,6 @@ class TestTempoCliCreate(object):
         result = template_invoke()
 
         assert result.exit_code == 0
-        assert not result.output
         assert request.called_once
         assert request.last_request.json()['authorUsername'] == template_data['issues'][0]['extras']['authorUsername']
 
@@ -132,7 +128,6 @@ class TestTempoCliCreate(object):
         )
 
         assert result.exit_code == 0
-        assert not result.output
         assert request.called_once
         assert request.last_request.headers['Authorization'] == 'Bearer {}'.format(token)
 
@@ -146,7 +141,6 @@ class TestTempoCliCreate(object):
         result = template_invoke()
 
         assert result.exit_code == 0
-        assert not result.output
         assert request.called_once
         assert request.last_request.json()['startDate'] == '2018-08-06'
         assert request.last_request.json()['startTime'] == '11:00:00'

@@ -10,6 +10,7 @@ from tempocli.client import TempoClient
 from tempocli.funcs import get_env_opt
 from tempocli.funcs import load_yaml
 from tempocli.funcs import parse_short_time
+from tqdm import tqdm
 
 
 ENVVAR_PREFIX = 'TEMPOCLI'
@@ -140,26 +141,31 @@ def create(tempo, template):
 
         futures.append(future)
 
-        for future in tempo.client.as_completed(futures):
-            try:
-                response = future.result()
-                response.raise_for_status()
-            except Exception as e:
-                click.echo(
-                    'Could not create {}: {}'.format(
-                        future.issue,
-                        str(e),
-                    ),
-                    err=True,
-                )
+    for future in tqdm(
+        tempo.client.as_completed(futures),
+        desc='Adding worklogs',
+        total=len(futures),
+        ncols=100,
+    ):
+        try:
+            response = future.result()
+            response.raise_for_status()
+        except Exception as e:
+            click.echo(
+                'Could not create {}: {}'.format(
+                    future.issue,
+                    str(e),
+                ),
+                err=True,
+            )
 
-                if tempo.verbose:
-                    click.echo(traceback.format_exc(), err=True)
+            if tempo.verbose:
+                click.echo(traceback.format_exc(), err=True)
 
-                error = True
+            error = True
 
-        if error:
-            sys.exit(1)
+    if error:
+        sys.exit(1)
 
 
 def main():  # pragma: no cover
