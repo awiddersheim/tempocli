@@ -138,28 +138,25 @@ def create(tempo, template):
             data['startTime'],
         )
 
-        with click.progressbar(
-            tempo.client.as_completed(futures),
-            label='Adding worklogs',
-            length=len(futures),
-        ) as _futures:
-            for future in _futures:
-                try:
-                    response = future.result()
-                    response.raise_for_status()
-                except Exception as e:
-                    click.echo(
-                        'Could not create {}: {}'.format(
-                            future.issue,
-                            str(e),
-                        ),
-                        err=True,
-                    )
+        futures.append(future)
 
-                    if tempo.verbose:
-                        click.echo(traceback.format_exc(), err=True)
+        for future in tempo.client.as_completed(futures):
+            try:
+                response = future.result()
+                response.raise_for_status()
+            except Exception as e:
+                click.echo(
+                    'Could not create {}: {}'.format(
+                        future.issue,
+                        str(e),
+                    ),
+                    err=True,
+                )
 
-                    error = True
+                if tempo.verbose:
+                    click.echo(traceback.format_exc(), err=True)
+
+                error = True
 
         if error:
             sys.exit(1)
