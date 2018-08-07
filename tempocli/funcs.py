@@ -39,7 +39,7 @@ def parse_short_time(time):
 
 
 def get_env_opt(var, *args, **kwargs):
-    return os.environ.get(
+    return os.getenv(
         '{}_{}'.format(
             click.get_current_context().auto_envvar_prefix,
             var,
