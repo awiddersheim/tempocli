@@ -13,7 +13,7 @@ def test_parse_short_time():
 def test_parse_short_time_invalid():
     with pytest.raises(
         ValueError,
-        match='Could not parse time, allowed units \({}\)'.format(
+        match=r'Could not parse time, allowed units \({}\)'.format(
             ', '.join(TIME_UNITS.keys()),
         ),
     ):

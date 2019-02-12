@@ -12,7 +12,7 @@ TIME_UNITS = {
 }
 
 TIME_REGEX = re.compile(
-    '^(?P<time>\d+)(?P<unit>({}))$'.format(
+    r'^(?P<time>\d+)(?P<unit>({}))$'.format(
         '|'.join(TIME_UNITS.keys()),
     ),
 )
