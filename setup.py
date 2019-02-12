@@ -7,7 +7,7 @@ from setuptools import setup
 def local_scheme(version):
     from pkg_resources import iter_entry_points
 
-    # NOTE(awiddersheim): Modify default behaviour slighlty by not
+    # NOTE(awiddersheim): Modify default behaviour slightly by not
     # adding any local scheme to a clean `master` branch.
     if version.branch == 'master' and not version.dirty:
         return ''
@@ -26,11 +26,21 @@ with io.open('README.rst', encoding='utf-8') as f:
 setup(
     name='tempocli',
     use_scm_version={
+        # NOTE(awiddersheim): Pulling from an environment variable is a
+        # hack to get around the fact that `--exclude` for
+        # `git-describe` is not ubiquitous yet. Once that happens it can
+        # be removed if no longer needed.
+        'git_describe_command': 'git describe --dirty --tags --long --match {}'.format(
+            os.getenv(
+                'SETUPTOOLS_SCM_PREVIOUS_TAG',
+                '"v*.*" --exclude "*.dev*"',
+            ),
+        ),
         'local_scheme': local_scheme,
         'write_to': 'tempocli/version.py',
     },
     setup_requires=[
-        'setuptools_scm',
+        'setuptools_scm>=3.2.0',
     ],
     author='Andrew Widdersheim',
     author_email='amwiddersheim@gmail.com',

@@ -58,7 +58,9 @@ jobs:
     steps:
       - checkout
       - run: pip install --user tox
-      - run: /home/circleci/.local/bin/tox
+      - run: |
+          export SETUPTOOLS_SCM_PREVIOUS_TAG="$(git tag | sort -V | grep "^v.*" | grep -v ".dev" | tail -n 1)"
+          /home/circleci/.local/bin/tox
       - store_artifacts:
           path: dist
           destination: packages
@@ -67,34 +69,24 @@ jobs:
           paths:
             - dist
 
-  deploy_pypi:
+  deploy:
     docker:
       - image: circleci/python:3
     environment:
-      TOXENV: deploy_pypi
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - checkout
-      - run: pip install --user tox
-      - run: /home/circleci/.local/bin/tox -- '/tmp/workspace/dist/*'
-
-  deploy_github:
-    docker:
-      - image: circleci/python:3
-    environment:
-      TOXENV: deploy_github
+      TOXENV: deploy
     steps:
       - attach_workspace:
           at: /tmp/workspace
       - checkout
       - run: pip install --user tox
       - run: |
-          export GITHUB_RELEASE_CICD_REPO=$(python setup.py --name)
+          export SETUPTOOLS_SCM_PREVIOUS_TAG="$(git tag | sort -V | grep "^v.*" | grep -v ".dev" | tail -n 1)"
+          export GITHUB_RELEASE_CICD_REPO="$(python setup.py --name)"
           export GITHUB_RELEASE_CICD_CREATE_TAG="v$(python setup.py --version)"
-          export GITHUB_RELEASE_CICD_CREATE_MESSAGE=$(git show --no-patch --pretty=format:"%s%n%b" ${CIRCLE_SHA1})
-          export GITHUB_RELEASE_CICD_CREATE_TARGET=${CIRCLE_SHA1}
-          /home/circleci/.local/bin/tox -- --assets '/tmp/workspace/dist/*'
+          export GITHUB_RELEASE_CICD_CREATE_MESSAGE="$(git show --no-patch --pretty=format:%s%n%b ${CIRCLE_SHA1})"
+          export GITHUB_RELEASE_CICD_CREATE_PRERELEASE="$([ -z "${CIRCLE_TAG}" ] && echo true || echo false)"
+          export GITHUB_RELEASE_CICD_CREATE_TARGET="${CIRCLE_SHA1}"
+          /home/circleci/.local/bin/tox -- '/tmp/workspace/dist/*'
 
 workflows:
   version: 2
@@ -103,23 +95,23 @@ workflows:
       - check_readme:
           filters:
             tags:
-              only: /^v.*/
+              only: /^v[0-9.]*/
       - flake8:
           filters:
             tags:
-              only: /^v.*/
+              only: /^v[0-9.]*/
       - python35:
           filters:
             tags:
-              only: /^v.*/
+              only: /^v[0-9.]*/
       - python36:
           filters:
             tags:
-              only: /^v.*/
+              only: /^v[0-9.]*/
       - python37:
           filters:
             tags:
-              only: /^v.*/
+              only: /^v[0-9.]*/
       - build:
           requires:
             - check_readme
@@ -129,20 +121,12 @@ workflows:
             - python37
           filters:
             tags:
-              only: /^v.*/
-      - deploy_pypi:
+              only: /^v[0-9.]*/
+      - deploy:
           requires:
             - build
           filters:
             branches:
               only: master
             tags:
-              only: /^v.*/
-      - deploy_github:
-          requires:
-            - build
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
+              only: /^v[0-9.]*/
