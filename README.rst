@@ -59,7 +59,7 @@ Running
 
 ::
 
-    tempocli --config <config> create --template <template>
+    $ tempocli --config <config> create --template <template>
 
 Configuration
 -------------
@@ -73,6 +73,13 @@ invocation. The configuration file should look like this::
 
 It is also possible to specify the token using the ``TEMPOCLI_TOKEN``
 environment variable.
+
+Docker
+------
+
+::
+
+    $ docker pull awiddersheim/tempocli
 
 Development
 -----------
