@@ -80,6 +80,7 @@ Docker
 ::
 
     $ docker pull awiddersheim/tempocli
+    $ docker run --rm -tty --interactive awiddersheim/tempocli
 
 Development
 -----------
