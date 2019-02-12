@@ -1,6 +1,6 @@
 from tempocli.requests import FuturesSession
 
-DEFAULT_TEMPO_BASE_URL = 'https://api.tempo.io/core/3/worklogs'
+DEFAULT_TEMPO_BASE_URL = 'https://api.tempo.io/core/3'
 
 
 class TempoClient(FuturesSession):
