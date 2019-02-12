@@ -83,7 +83,6 @@ def cli(ctx, config, workers, verbose):
         config['token'] = token
 
     client = TempoClient(
-        base_url=config['url'],
         token=config['token'],
         max_workers=workers,
     )
@@ -120,7 +119,7 @@ def create(tempo, template):
                 'description',
                 'Working on issue {}'.format(issue['issue']),
             ),
-            'authorUsername': issue.get('author', temp['author']),
+            'authorAccountId': issue.get('author_account_id', temp['author_account_id']),
         }
 
         # NOTE(awiddersheim): Load in any extra data overriding base
@@ -133,7 +132,7 @@ def create(tempo, template):
         )
 
         future.issue = (
-            data['authorUsername'],
+            data['authorAccountId'],
             data['issueKey'],
             data['startDate'],
             data['startTime'],

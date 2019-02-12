@@ -12,10 +12,13 @@ Ease repetitive Tempo tasks by using templates to fill in recurring
 items without having to use web interface. Templates are yaml formatted
 files that are semi-flexible in allowing what can be created.
 
+The `author_account_id` can be obtained by going to your profile in
+JIRA and copying the ID from the URL.
+
 ::
 
     ----
-    author: foo
+    author_account_id: foo
 
     issues:
       # Will use current date if one can't be determined.
@@ -28,11 +31,11 @@ files that are semi-flexible in allowing what can be created.
         time_spent: 1h
         start_time: Monday at 9AM
 
-      # Full on datetime with author override.
+      # Full on datetime with override.
       - issue: INT-11
         time_spent: 90s
         start_time: "2018-08-05 11:00:00"
-        author: bar
+        author_account_id: bar
 
       # Pass in extras that aren't exposed in DSL.
       # https://tempo-io.github.io/tempo-api-docs/#worklogs
@@ -66,7 +69,6 @@ file but that can be changed with the ``--config`` option during
 invocation. The configuration file should look like this::
 
     ---
-    url: https://api.tempo.io/2/
     token: <token>
 
 It is also possible to specify the token using the ``TEMPOCLI_TOKEN``

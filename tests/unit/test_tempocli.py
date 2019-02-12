@@ -16,7 +16,7 @@ def test_tempocli(cli_runner):
 @pytest.mark.freeze_time('2018-08-05')
 class TestTempoCliCreate(object):
     data = {
-        'author': 'foo',
+        'author_account_id': 'foo',
         'issues': [
             {
                 'issue': 'INT-8',
@@ -62,7 +62,7 @@ class TestTempoCliCreate(object):
         assert result.exit_code == 0
         assert request.called_once
         assert request.last_request.json() == {
-            'authorUsername': 'foo',
+            'authorAccountId': 'foo',
             'issueKey': self.data['issues'][0]['issue'],
             'timeSpentSeconds': 1800,
             'startDate': '2018-08-05',
@@ -87,7 +87,7 @@ class TestTempoCliCreate(object):
         assert request.call_count == 2
 
     def test_create_author_override(self, template, template_data, template_invoke, tempo_request):
-        template_data['issues'][0]['author'] = 'bar'
+        template_data['issues'][0]['author_account_id'] = 'bar'
 
         write_yaml(template, template_data)
 
@@ -97,11 +97,11 @@ class TestTempoCliCreate(object):
 
         assert result.exit_code == 0
         assert request.called_once
-        assert request.last_request.json()['authorUsername'] == template_data['issues'][0]['author']
+        assert request.last_request.json()['authorAccountId'] == template_data['issues'][0]['author_account_id']
 
     def test_create_extras_override(self, template, template_data, template_invoke, tempo_request):
         template_data['issues'][0]['extras'] = {
-            'authorUsername': 'bar',
+            'authorAccountId': 'bar',
         }
 
         write_yaml(template, template_data)
@@ -112,7 +112,7 @@ class TestTempoCliCreate(object):
 
         assert result.exit_code == 0
         assert request.called_once
-        assert request.last_request.json()['authorUsername'] == template_data['issues'][0]['extras']['authorUsername']
+        assert request.last_request.json()['authorAccountId'] == template_data['issues'][0]['extras']['authorAccountId']
 
     def test_create_token_from_env(self, template, template_data, template_invoke, tempo_request):
         token = 'fromenv'  # noqa: S105

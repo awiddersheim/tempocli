@@ -6,9 +6,6 @@ from tempocli.client import TempoClient
 from tests.helpers import write_yaml
 
 
-TEMPO_URL = 'https://localhost/'
-
-
 @pytest.fixture
 def config(tmpdir):
     config = tmpdir.join('config.yml')
@@ -17,7 +14,6 @@ def config(tmpdir):
         config,
         {
             'token': 'foo',
-            'url': 'https://localhost/',
         },
     )
 
@@ -26,10 +22,7 @@ def config(tmpdir):
 
 @pytest.fixture
 def tempo_client():
-    return TempoClient(  # noqa: S106
-        base_url=TEMPO_URL,
-        token='foo',
-    )
+    return TempoClient(token='foo')  # noqa: S106
 
 
 @pytest.fixture
