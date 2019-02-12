@@ -109,10 +109,13 @@ Testing
     # Run tests
     $ pytest
 
-    # Run tests for available Python interpreters
+    # Run tests for all available Python interpreters
     $ tox
 
     # Linting
+    $ flake8
+
+    # Can also lint in tox as well
     $ tox -e flake8
 
 
