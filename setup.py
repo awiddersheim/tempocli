@@ -51,7 +51,7 @@ setup(
     packages=find_packages(exclude=['tests', 'tests.*']),
     install_requires=[
         'arrow',
-        'click',
+        'click>=7',
         'pyyaml',
         'requests',
         'requests-futures',

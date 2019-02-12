@@ -48,6 +48,7 @@ def common_template_options(f):
     '--config',
     help='Path to configuration file.',
     envvar='CONFIG',
+    show_envvar=True,
     default=os.path.expanduser('~/.tempocli.yml'),
     type=click.Path(
         exists=True,
@@ -61,6 +62,7 @@ def common_template_options(f):
     '--verbose',
     help='Verbose output.',
     envvar='VERBOSE',
+    show_envvar=True,
     count=True,
 )
 @click.option(
@@ -68,8 +70,10 @@ def common_template_options(f):
     '--workers',
     help='Number of workers to spawn.',
     envvar='WORKERS',
+    show_envvar=True,
     default=10,
     show_default=True,
+    type=int,
 )
 @click.pass_context
 def cli(ctx, config, workers, verbose):
