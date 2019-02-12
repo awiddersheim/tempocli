@@ -13,3 +13,4 @@ dist/
 version.py
 .pytest_cache/
 .python-version
+htmlcov
