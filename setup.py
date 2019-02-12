@@ -54,7 +54,7 @@ setup(
         'click>=7',
         'pyyaml',
         'requests',
-        'requests-futures',
+        'requests-futures>=0.9.9',
         'tqdm',
     ],
     extras_require={

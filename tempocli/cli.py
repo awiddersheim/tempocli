@@ -66,6 +66,15 @@ def common_template_options(f):
     count=True,
 )
 @click.option(
+    '-r',
+    '--max-retries',
+    help='Max number of retries to perfom for failed requests. Setting to 0 disables retries.',
+    envvar='MAX_RETRIES',
+    default=10,
+    show_default=True,
+    type=int,
+)
+@click.option(
     '-w',
     '--workers',
     help='Number of workers to spawn.',
@@ -76,7 +85,7 @@ def common_template_options(f):
     type=int,
 )
 @click.pass_context
-def cli(ctx, config, workers, verbose):
+def cli(ctx, config, max_retries, workers, verbose):
     """Interact with Tempo time tracking from the command line."""
 
     config = load_yaml(config)
@@ -89,6 +98,7 @@ def cli(ctx, config, workers, verbose):
     client = TempoClient(
         token=config['token'],
         max_workers=workers,
+        max_retries=max_retries,
     )
 
     ctx.obj = Tempo(
