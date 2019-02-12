@@ -105,6 +105,10 @@ workflows:
   version: 2
   test-and-build:
     jobs:
+      - build_docker:
+          filters:
+            tags:
+              only: /^v[0-9.]*/
       - check_readme:
           filters:
             tags:
@@ -125,8 +129,9 @@ workflows:
           filters:
             tags:
               only: /^v[0-9.]*/
-      - build:
+      - build_dist:
           requires:
+            - build_docker
             - check_readme
             - flake8
             - python35
@@ -137,7 +142,7 @@ workflows:
               only: /^v[0-9.]*/
       - deploy:
           requires:
-            - build
+            - build_dist
           filters:
             branches:
               only: master
