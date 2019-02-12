@@ -12,7 +12,7 @@ Ease repetitive Tempo tasks by using templates to fill in recurring
 items without having to use web interface. Templates are yaml formatted
 files that are semi-flexible in allowing what can be created.
 
-The `author_account_id` can be obtained by going to your profile in
+The ``author_account_id`` can be obtained by going to your profile in
 JIRA and copying the ID from the URL.
 
 ::
