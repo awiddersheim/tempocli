@@ -83,7 +83,7 @@ jobs:
           export SETUPTOOLS_SCM_PREVIOUS_TAG="$(git tag | sort -V | grep "^v.*" | grep -v ".dev" | tail -n 1)"
           export GITHUB_RELEASE_CICD_REPO="$(python setup.py --name)"
           export GITHUB_RELEASE_CICD_CREATE_TAG="v$(python setup.py --version)"
-          export GITHUB_RELEASE_CICD_CREATE_MESSAGE="$(git show --no-patch --pretty=format:%s%n%b ${CIRCLE_SHA1})"
+          export GITHUB_RELEASE_CICD_CREATE_MESSAGE="$([ -z "${CIRCLE_TAG}" ] && git show --no-patch --pretty=format:%s%n%n%b ${CIRCLE_SHA1} || git tag -l --format="%(contents)" ${CIRCLE_TAG})"
           export GITHUB_RELEASE_CICD_CREATE_PRERELEASE="$([ -z "${CIRCLE_TAG}" ] && echo true || echo false)"
           export GITHUB_RELEASE_CICD_CREATE_TARGET="${CIRCLE_SHA1}"
           /home/circleci/.local/bin/tox -- '/tmp/workspace/dist/*'
