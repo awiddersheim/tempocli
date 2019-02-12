@@ -50,7 +50,7 @@ jobs:
     environment:
       TOXENV: check_readme
 
-  build:
+  build_dist:
     docker:
       - image: circleci/python:3
     environment:
@@ -69,6 +69,14 @@ jobs:
           paths:
             - dist
 
+  build_docker:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build .
+
   deploy:
     docker:
       - image: circleci/python:3
@@ -78,6 +86,7 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - checkout
+      - setup_remote_docker
       - run: pip install --user tox
       - run: |
           export SETUPTOOLS_SCM_PREVIOUS_TAG="$(git tag | sort -V | grep "^v.*" | grep -v ".dev" | tail -n 1)"
@@ -87,6 +96,10 @@ jobs:
           export GITHUB_RELEASE_CICD_CREATE_PRERELEASE="$([ -z "${CIRCLE_TAG}" ] && echo true || echo false)"
           export GITHUB_RELEASE_CICD_CREATE_TARGET="${CIRCLE_SHA1}"
           /home/circleci/.local/bin/tox -- '/tmp/workspace/dist/*'
+          docker build -t awiddersheim/tempocli:${GITHUB_RELEASE_CICD_CREATE_TAG} .
+          docker tag awiddersheim/tempocli:${GITHUB_RELEASE_CICD_CREATE_TAG} awiddersheim/tempocli:latest
+          docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+          docker push awiddersheim/tempocli
 
 workflows:
   version: 2
