@@ -80,7 +80,14 @@ Docker
 ::
 
     $ docker pull awiddersheim/tempocli
-    $ docker run --rm -tty --interactive awiddersheim/tempocli
+    $ docker run \
+        --rm \
+        --tty \
+        --interactive \
+        --volume ~/.tempocli.yml:/home/tempocli/.tempocli.yml:ro \
+        --volume /some/dir/with/templates:/templates:ro \
+        awiddersheim/tempocli \
+        create --template /templates/template.yml
 
 Development
 -----------
