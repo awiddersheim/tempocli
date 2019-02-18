@@ -70,18 +70,6 @@ jobs:
       - setup_remote_docker
       - run: docker build .
 
-  check_packages:
-    docker:
-      - image: circleci/python:3
-    environment:
-      TOXENV: check_packages
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - checkout
-      - run: pip install --user tox
-      - run: /home/circleci/.local/bin/tox -- '/tmp/workspace/dist/*'
-
   deploy:
     docker:
       - image: circleci/python:3
@@ -109,8 +97,12 @@ jobs:
 
 workflows:
   version: 2
-  test-and-build:
+  test-build-deploy:
     jobs:
+      - build_dist:
+          filters:
+            tags:
+              only: /^v[0-9.]*/
       - build_docker:
           filters:
             tags:
@@ -131,21 +123,10 @@ workflows:
           filters:
             tags:
               only: /^v[0-9.]*/
-      - build_dist:
-          filters:
-            tags:
-              only: /^v[0-9.]*/
-      - check_packages:
-          requires:
-            - build_dist
-          filters:
-            tags:
-              only: /^v[0-9.]*/
       - deploy:
           requires:
-            - build_docker
             - build_dist
-            - check_packages
+            - build_docker
             - flake8
             - python35
             - python36
