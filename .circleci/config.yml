@@ -132,12 +132,6 @@ workflows:
             tags:
               only: /^v[0-9.]*/
       - build_dist:
-          requires:
-            - build_docker
-            - flake8
-            - python35
-            - python36
-            - python37
           filters:
             tags:
               only: /^v[0-9.]*/
@@ -149,7 +143,13 @@ workflows:
               only: /^v[0-9.]*/
       - deploy:
           requires:
+            - build_docker
+            - build_dist
             - check_packages
+            - flake8
+            - python35
+            - python36
+            - python37
           filters:
             branches:
               only: master
