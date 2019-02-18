@@ -68,7 +68,13 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: docker build .
+      - run: |
+          docker build --tag awiddersheim/tempocli:${DOCKER_TAG} .
+          docker save -o docker-cache/image.tar awiddersheim/tempocli:${DOCKER_TAG}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - docker-cache
 
   deploy:
     docker:
@@ -89,7 +95,7 @@ jobs:
           export GITHUB_RELEASE_CICD_CREATE_MESSAGE="$([ -z "${CIRCLE_TAG}" ] && git show --no-patch --pretty=format:%s%n%n%b ${CIRCLE_SHA1} || git tag --list --format="%(contents)" ${CIRCLE_TAG})"
           export GITHUB_RELEASE_CICD_CREATE_PRERELEASE="$([ -z "${CIRCLE_TAG}" ] && echo true || echo false)"
           export GITHUB_RELEASE_CICD_CREATE_TARGET="${CIRCLE_SHA1}"
-          docker build --tag awiddersheim/tempocli:${DOCKER_TAG} .
+          docker load --input /tmp/workspace/docker-cache/image.tar
           [ -z "${CIRCLE_TAG}" ] || docker tag awiddersheim/tempocli:${DOCKER_TAG} awiddersheim/tempocli:latest
           docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
           /home/circleci/.local/bin/tox -- '/tmp/workspace/dist/*'
