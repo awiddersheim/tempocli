@@ -20,7 +20,7 @@ def local_scheme(version):
         return item.load()(version)
 
 
-with io.open('README.rst', encoding='utf-8') as f:
+with io.open('README.md', encoding='utf-8') as f:
     long_description = f.read()
 
 
@@ -48,6 +48,7 @@ setup(
     url='https://github.com/awiddersheim/tempocli',
     description='Command line interface for interacting with Tempo.',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=find_packages(exclude=['tests', 'tests.*']),
     install_requires=[
         'arrow',
