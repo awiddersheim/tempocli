@@ -70,8 +70,9 @@ jobs:
       - setup_remote_docker
       - run: |
           export DOCKER_TAG="$(python setup.py --version)"
+          mkdir -p docker-cache
           docker build --tag awiddersheim/tempocli:${DOCKER_TAG} .
-          docker save -o docker-cache/image.tar awiddersheim/tempocli:${DOCKER_TAG}
+          docker save --output docker-cache/image.tar awiddersheim/tempocli:${DOCKER_TAG}
       - persist_to_workspace:
           root: .
           paths:
