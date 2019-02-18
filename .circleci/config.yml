@@ -43,7 +43,7 @@ jobs:
       - run: pip install --user tox
       - run: /home/circleci/.local/bin/tox
 
-  build:
+  build_dist:
     docker:
       - image: circleci/python:3
     environment:
@@ -61,6 +61,14 @@ jobs:
           root: .
           paths:
             - dist
+
+  build_docker:
+    docker:
+      - image: circleci/python:3
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build .
 
   deploy:
     docker:
@@ -91,7 +99,11 @@ workflows:
   version: 2
   test-build-deploy:
     jobs:
-      - build:
+      - build_dist:
+          filters:
+            tags:
+              only: /^v[0-9.]*/
+      - build_docker:
           filters:
             tags:
               only: /^v[0-9.]*/
@@ -113,7 +125,8 @@ workflows:
               only: /^v[0-9.]*/
       - deploy:
           requires:
-            - build
+            - build_dist
+            - build_docker
             - flake8
             - python35
             - python36
