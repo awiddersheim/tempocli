@@ -69,6 +69,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: |
+          export SETUPTOOLS_SCM_PREVIOUS_TAG="$(git tag | sort -V | grep "^v.*" | grep -v ".dev" | tail -n 1)"
           export DOCKER_TAG="$(python setup.py --version)"
           mkdir -p docker-cache
           docker build --tag awiddersheim/tempocli:${DOCKER_TAG} .
