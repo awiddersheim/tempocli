@@ -2,9 +2,10 @@
 
 Command line interface for interacting with Tempo.
 
-[![Build Status](https://img.shields.io/circleci/project/github/awiddersheim/tempocli/master.svg)](https://circleci.com/gh/awiddersheim/tempocli)
 [![PyPI version](https://img.shields.io/pypi/v/tempocli.svg)](https://pypi.org/project/tempocli)
 [![Python Versions](https://img.shields.io/pypi/pyversions/tempocli.svg)](https://pypi.org/project/tempocli)
+[![Build Status](https://img.shields.io/circleci/project/github/awiddersheim/tempocli/master.svg)](https://circleci.com/gh/awiddersheim/tempocli)
+[![License](https://img.shields.io/pypi/l/tempocli.svg)](https://github.com/awiddersheim/tempocli/blob/master/LICENSE)
 [![Docker Pulls](https://img.shields.io/docker/pulls/awiddersheim/tempocli.svg)](https://hub.docker.com/r/awiddersheim/tempocli)
 
 ## Introduction
