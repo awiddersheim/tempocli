@@ -95,7 +95,6 @@ $ pip install -e .
 $ tempocli --help
 ```
 
-
 ## Testing
 
 ```
