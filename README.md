@@ -88,6 +88,12 @@ $ docker run \
     create --template /templates/template.yml
 ```
 
+### Building
+
+```
+$ docker build --tag tempocli --target prod .
+```
+
 ## Development
 
 ```
