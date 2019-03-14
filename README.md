@@ -51,7 +51,6 @@ issues:
 
 ```
 $ pip install tempocli
-$ pip install --upgrade tempocli
 ```
 
 ## Running
