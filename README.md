@@ -75,8 +75,9 @@ environment variable.
 
 ## Docker
 
+### DockerHub
+
 ```
-$ docker pull awiddersheim/tempocli
 $ docker run \
     --rm \
     --tty \
@@ -98,7 +99,7 @@ $ tempocli --help
 
 ```
 # Install development packages (preferably in a virtualenv)
-$ pip install -e .[dev]
+$ pip install --editable .[dev]
 
 # Run tests
 $ pytest
