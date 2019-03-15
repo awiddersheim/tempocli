@@ -11,6 +11,8 @@ TIME_UNITS = {
     'h': 3600,
 }
 
+# NOTE(awiddersheim): Builds out a regex to match a string that starts
+# with any number of decimals followed by a time unit.
 TIME_REGEX = re.compile(
     r'^(?P<time>\d+)(?P<unit>({}))$'.format(
         '|'.join(TIME_UNITS.keys()),

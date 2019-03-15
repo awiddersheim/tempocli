@@ -17,8 +17,11 @@ class FuturesSession(requests_futures.sessions.FuturesSession):
         )
 
         # NOTE(awiddersheim): Assign the session to the current object
-        # instance so that subclassed methods like `request()` get
-        # called properly.
+        # instance so that subclassed methods like `request()` below
+        # that are defined in this class get called properly. Check out
+        # the logic used in `requests_futures.sessions.FuturesSession()`
+        # to get a full understanding of how this assignment affects how
+        # things are called.
         self.session = self
 
     def request(self, method, url, *args, **kwargs):
@@ -28,8 +31,9 @@ class FuturesSession(requests_futures.sessions.FuturesSession):
 
     def request_future(self, *args, **kwargs):
         # NOTE(awiddersheim): This will actually call the subclassed
-        # `request()` method since `self.session` is assigned to the
-        # instance of this object.
+        # `request()` method above since `self.session` is assigned to
+        # the instance of this object. It will in turn use the defacto
+        # `requests.Session.request()` to do the final heeavy lifting.
         return super().request(*args, **kwargs)
 
     def get_future(self, *args, **kwargs):
