@@ -88,7 +88,7 @@ $ docker run \
     create --template /templates/template.yml
 ```
 
-### Building
+### Building Locally
 
 ```
 $ docker build --tag tempocli --target prod .
@@ -97,7 +97,7 @@ $ docker build --tag tempocli --target prod .
 ## Development
 
 ```
-$ pip install -e .
+$ pip install --editable .
 $ tempocli --help
 ```
 
@@ -110,7 +110,7 @@ $ pip install --editable .[dev]
 # Run tests
 $ pytest
 
-# Run tests for all available Python interpreters
+# Run tests for available Python interpreters
 $ tox
 
 # Linting
