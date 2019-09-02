@@ -82,7 +82,8 @@ jobs:
       - run: |
           export DOCKER_TAG="$(python setup.py --version)"
           export GITHUB_RELEASE_CICD_REPO="$(python setup.py --name)"
-          export GITHUB_RELEASE_CICD_CREATE_TAG="v$(python setup.py --version)"
+          export GITHUB_RELEASE_CICD_CREATE_NAME="$(python setup.py --version)"
+          export GITHUB_RELEASE_CICD_CREATE_TAG="v${GITHUB_RELEASE_CICD_CREATE_NAME}"
           export GITHUB_RELEASE_CICD_CREATE_MESSAGE="$([ -z "${CIRCLE_TAG}" ] && git show --no-patch --pretty=format:%s%n%n%b ${CIRCLE_SHA1} || git tag --list --format="%(contents)" ${CIRCLE_TAG})"
           export GITHUB_RELEASE_CICD_CREATE_PRERELEASE="$([ -z "${CIRCLE_TAG}" ] && echo true || echo false)"
           export GITHUB_RELEASE_CICD_CREATE_TARGET="${CIRCLE_SHA1}"
