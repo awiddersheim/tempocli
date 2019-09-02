@@ -152,7 +152,7 @@ class TestTempoCliCreate(object):
 
         result = template_invoke()
 
-        assert 'Could not create (\'foo\', \'INT-8\',' in result.output
+        assert "Could not create ('foo', 'INT-8'," in result.output
         assert 'Traceback' in result.output
         assert result.exit_code == 1
         assert request.called_once
