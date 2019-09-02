@@ -1,5 +1,4 @@
 import io
-import os
 
 from setuptools import find_packages
 from setuptools import setup
@@ -27,16 +26,7 @@ with io.open('README.md', encoding='utf-8') as f:
 setup(
     name='tempocli',
     use_scm_version={
-        # NOTE(awiddersheim): Pulling from an environment variable is a
-        # hack to get around the fact that `--exclude` for
-        # `git-describe` is not ubiquitous yet. Once that happens it can
-        # be removed if no longer needed.
-        'git_describe_command': 'git describe --dirty --tags --long --match {}'.format(
-            os.getenv(
-                'SETUPTOOLS_SCM_PREVIOUS_TAG',
-                '"v*.*" --exclude "*.dev*"',
-            ),
-        ),
+        'git_describe_command': 'git describe --dirty --tags --long --match "v*.*" --exclude "*.dev*" --first-parent',
         'local_scheme': local_scheme,
         'write_to': 'tempocli/version.py',
     },

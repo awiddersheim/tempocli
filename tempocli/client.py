@@ -24,7 +24,7 @@ class TempoClient(FuturesSession):
                     'OPTIONS',
                     'DELETE',
                 ]),
-                status_forcelist=[429],
+                status_forcelist=frozenset([429]),
             )
 
         super().__init__(base_url, **kwargs)

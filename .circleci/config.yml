@@ -51,9 +51,7 @@ jobs:
     steps:
       - checkout
       - run: pip install --user tox
-      - run: |
-          export SETUPTOOLS_SCM_PREVIOUS_TAG="$(git tag | sort -V | grep "^v.*" | grep -v ".dev" | tail -n 1)"
-          /home/circleci/.local/bin/tox
+      - run: /home/circleci/.local/bin/tox
       - store_artifacts:
           path: dist
           destination: packages
@@ -82,7 +80,6 @@ jobs:
       - setup_remote_docker
       - run: pip install --user tox
       - run: |
-          export SETUPTOOLS_SCM_PREVIOUS_TAG="$(git tag | sort -V | grep "^v.*" | grep -v ".dev" | tail -n 1)"
           export DOCKER_TAG="$(python setup.py --version)"
           export GITHUB_RELEASE_CICD_REPO="$(python setup.py --name)"
           export GITHUB_RELEASE_CICD_CREATE_TAG="v$(python setup.py --version)"
