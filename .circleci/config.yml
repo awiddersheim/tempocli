@@ -1,10 +1,10 @@
 version: 2
 jobs:
-  python35: &pytest-template
+  python38: &pytest-template
     docker:
-      - image: circleci/python:3.5
+      - image: circleci/python:3.8
     environment:
-      TOXENV: py35
+      TOXENV: py38
     steps:
       - checkout
       - run: pip install --user tox
@@ -19,19 +19,19 @@ jobs:
       - store_test_results:
           path: test_results
 
-  python36:
+  python39:
     <<: *pytest-template
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.9
     environment:
-      TOXENV: py36
+      TOXENV: py39
 
-  python37:
+  python310:
     <<: *pytest-template
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.10
     environment:
-      TOXENV: py37
+      TOXENV: py310
 
   flake8:
     docker:
@@ -109,15 +109,15 @@ workflows:
           filters:
             tags:
               only: /^v[0-9.]*/
-      - python35:
+      - python38:
           filters:
             tags:
               only: /^v[0-9.]*/
-      - python36:
+      - python39:
           filters:
             tags:
               only: /^v[0-9.]*/
-      - python37:
+      - python310:
           filters:
             tags:
               only: /^v[0-9.]*/
@@ -126,9 +126,9 @@ workflows:
             - build_dist
             - build_docker
             - flake8
-            - python35
-            - python36
-            - python37
+            - python38
+            - python39
+            - python310
           filters:
             branches:
               only: master
