@@ -14,7 +14,7 @@ def local_scheme(version):
 
     for item in iter_entry_points(
         'setuptools_scm.local_scheme',
-        'node-and-timestamp',
+        'node-and-date',
     ):
         return item.load()(version)
 
