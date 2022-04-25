@@ -86,7 +86,11 @@ jobs:
 
       - name: Get version
         id: get-version
-        run: echo "::set-output name=version::$(python setup.py --version)"
+        run: |
+          # https://github.com/actions/checkout/issues/290
+          git fetch --tags --force
+
+          echo "::set-output name=version::$(python setup.py --version)"
 
   build-docker:
     runs-on: ubuntu-latest
