@@ -232,20 +232,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # - name: Get release body
-    #   run: |
-    #     # https://github.com/actions/checkout/issues/290
-    #     git fetch --tags --force
-
-    #     # https://docs.github.com/en/actions/reference/workflow-commands-for-github-actions#multiline-strings
-    #     echo 'TEMPOCLI_CICD_RELEASE_BODY<<EOF' >> $GITHUB_ENV
-    #       if [ "${GITHUB_REF_TYPE}" = "branch" ]; then 
-    #         git show --no-patch --pretty=format:%s%n%n%b ${GITHUB_SHA} >> $GITHUB_ENV
-    #       else
-    #         git tag --list --format="%(contents:subject)%0a%(contents:body)" ${GITHUB_REF_NAME} >> $GITHUB_ENV
-    #       fi
-    #     echo 'EOF' >> $GITHUB_ENV
-
     - name: Download package artifact
       id: download
       uses: actions/download-artifact@v2
@@ -258,4 +244,5 @@ jobs:
       with:
         tag_name: v${{ needs.build-dist.outputs.version}}
         files: dist/*
+        fail_on_unmatched_files: true
         prerelease: ${{ github.ref_type	== 'branch' }}

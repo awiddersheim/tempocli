@@ -15,3 +15,4 @@ version.py
 .python-version
 htmlcov
 .git
+.github
