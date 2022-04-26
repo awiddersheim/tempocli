@@ -111,8 +111,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          build-args: |
-            SETUPTOOLS_SCM_PRETEND_VERSION=0.0.1
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 

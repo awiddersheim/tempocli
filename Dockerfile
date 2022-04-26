@@ -11,12 +11,12 @@ RUN pip install --no-cache-dir --upgrade \
         pip \
         setuptools \
     && mkdir -p tempocli \
-    && SETUPTOOLS_SCM_PRETEND_VERSION="0.0.1" pip install --no-cache-dir --editable . \
+    && SETUPTOOLS_SCM_PRETEND_VERSION="0.0.x" pip install --no-cache-dir --editable . \
     && useradd --no-create-home --system tempocli
 
 COPY . .
 
-ARG SETUPTOOLS_SCM_PRETEND_VERSION
+ARG SETUPTOOLS_SCM_PRETEND_VERSION=0.0.x
 
 RUN pip install --no-cache-dir --editable .
 
