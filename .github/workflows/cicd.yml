@@ -7,6 +7,8 @@ on:
     tags:
       - "v*"
 
+concurrency: ci-${{ github.ref }}
+
 jobs:
   test:
     strategy:
