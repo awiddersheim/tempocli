@@ -8,8 +8,8 @@ def local_scheme(version):
     from pkg_resources import iter_entry_points
 
     # NOTE(awiddersheim): Modify default behaviour slightly by not
-    # adding any local scheme to a clean `master` branch.
-    if version.branch == 'master' and not version.dirty:
+    # adding any local scheme to a clean `main` branch.
+    if version.branch == 'main' and not version.dirty:
         return ''
 
     for item in iter_entry_points(
