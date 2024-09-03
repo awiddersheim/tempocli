@@ -210,7 +210,7 @@ jobs:
 
       - name: Download package artifact
         id: download
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: packages
           path: dist
@@ -233,7 +233,7 @@ jobs:
 
     - name: Download package artifact
       id: download
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4.1.7
       with:
         name: packages
         path: dist
